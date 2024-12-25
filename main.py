@@ -1,15 +1,13 @@
 
 import tkinter as tk
 from pages.advanced import AdvancedScreen
-
+from utils.navigationFunctions import switchPage
 
 class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.pack()
 
-def switchPage(page):
-    page()
 
 
 def main():

@@ -1,0 +1,2 @@
+def switchPage(page):
+    page()

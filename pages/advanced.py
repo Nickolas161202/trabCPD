@@ -1,4 +1,6 @@
 import tkinter as tk
+from utils.navigationFunctions import switchPage
+from pages.resultPage import resultPage
 
 
 
@@ -17,6 +19,7 @@ def AdvancedScreen():
     
     regionLabel = tk.Label(adv_frame, text="selecione a região")
     setLabel = tk.Label(adv_frame, text="selecione o  set")
+    btn = tk.Button(adv_frame, text="pesquisar", command=lambda: switchPage(resultPage))
 
     manaLabel.pack()
     manaSearch.pack()
@@ -27,4 +30,5 @@ def AdvancedScreen():
     dmgSearch.pack()
     regionLabel.pack()
     setLabel.pack()
+    btn.pack()
     adv_frame.pack()
