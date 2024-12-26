@@ -1,8 +1,8 @@
 import tkinter as tk
 
 
-def detailedCard():
-    detailedFrame = tk.Frame()
+def detailedCard(parent):
+    detailedFrame = tk.Frame(master=parent)
     nameLabel = tk.Label(detailedFrame, text="nome")
 
 

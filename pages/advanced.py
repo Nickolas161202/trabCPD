@@ -3,9 +3,8 @@ from utils.navigationFunctions import switchPage
 from pages.resultPage import resultPage
 
 
-
-def AdvancedScreen():
-    adv_frame = tk.Frame()
+def AdvancedScreen(parent):
+    adv_frame = tk.Frame(master=parent)
 
     manaLabel =tk.Label(adv_frame, text= "digite o custo de mana")
     manaSearch = tk.Entry(adv_frame)
@@ -19,7 +18,7 @@ def AdvancedScreen():
     
     regionLabel = tk.Label(adv_frame, text="selecione a região")
     setLabel = tk.Label(adv_frame, text="selecione o  set")
-    btn = tk.Button(adv_frame, text="pesquisar", command=lambda: switchPage(resultPage))
+    btn = tk.Button(adv_frame, text="pesquisar", command=lambda: switchPage(adv_frame, resultPage, parent))
 
     manaLabel.pack()
     manaSearch.pack()
