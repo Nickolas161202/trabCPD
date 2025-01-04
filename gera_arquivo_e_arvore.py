@@ -2,31 +2,75 @@ import json
 import struct
 import pickle
 
-class NoB:
-    def __init__(self, is_folha=False):
-        self.is_folha = is_folha
-        self.chaves = []  # Lista de chaves
-        self.ponteiros = []  # Lista de ponteiros para os dados ou nós filhos
+class NoBPlus:
+    def __init__(self, grau, is_folha=True):
+        self.grau = grau              # Grau mínimo do nó
+        self.is_folha = is_folha      # Indica se o nó é folha
+        self.chaves = []              # Lista de chaves
+        self.ponteiros = []           # Ponteiros para dados ou nós filhos
+        self.proximo = None           # Ponteiro para o próximo nó folha (usado em nós folhas)
 
 class ArvoreBPlus:
-    # Implementação simplificada da árvore B+
-
-    def __init__(self, grau):
-        self.raiz = NoB(is_folha=True)
+    def __init__(self, grau=3):
+        self.raiz = NoBPlus(grau)
         self.grau = grau
 
-    def inserir(self, chave, ponteiro):
-        # Lógica de inserção simplificada na árvore B+
-        no_atual = self.raiz
-        no_atual.chaves.append(chave)
-        no_atual.ponteiros.append(ponteiro)
-
     def buscar(self, chave):
-        # Lógica simplificada de busca na árvore B+
         no_atual = self.raiz
+        while not no_atual.is_folha:
+            i = 0
+            while i < len(no_atual.chaves) and chave >= no_atual.chaves[i]:
+                i += 1
+            no_atual = no_atual.ponteiros[i]
+
+        # Buscar a chave no nó folha
         if chave in no_atual.chaves:
             return no_atual.ponteiros[no_atual.chaves.index(chave)]
-        return None  # Caso não encontrado
+        return None
+
+    def inserir(self, chave, ponteiro):
+        raiz = self.raiz
+        if len(raiz.chaves) == (2 * self.grau) - 1:
+            nova_raiz = NoBPlus(self.grau, is_folha=False)
+            nova_raiz.ponteiros.append(self.raiz)
+            self._dividir_no(nova_raiz, 0, self.raiz)
+            self.raiz = nova_raiz
+
+        self._inserir_nao_cheio(self.raiz, chave, ponteiro)
+
+    def _inserir_nao_cheio(self, no, chave, ponteiro):
+        if no.is_folha:
+            i = len(no.chaves) - 1
+            while i >= 0 and chave < no.chaves[i]:
+                i -= 1
+            no.chaves.insert(i + 1, chave)
+            no.ponteiros.insert(i + 1, ponteiro)
+        else:
+            i = len(no.chaves) - 1
+            while i >= 0 and chave < no.chaves[i]:
+                i -= 1
+            i += 1
+            if len(no.ponteiros[i].chaves) == (2 * self.grau) - 1:
+                self._dividir_no(no, i, no.ponteiros[i])
+                if chave > no.chaves[i]:
+                    i += 1
+            self._inserir_nao_cheio(no.ponteiros[i], chave, ponteiro)
+
+    def _dividir_no(self, pai, indice, no):
+        grau = self.grau
+        novo_no = NoBPlus(grau, is_folha=no.is_folha)
+        pai.chaves.insert(indice, no.chaves[grau - 1])
+        pai.ponteiros.insert(indice + 1, novo_no)
+
+        novo_no.chaves = no.chaves[grau:]
+        no.chaves = no.chaves[:grau - 1]
+
+        if not no.is_folha:
+            novo_no.ponteiros = no.ponteiros[grau:]
+            no.ponteiros = no.ponteiros[:grau]
+        else:
+            novo_no.proximo = no.proximo
+            no.proximo = novo_no
 
 class carta:
     def __init__(self,associated_card_refs,game_absolute_path,region_refs,attack,cost,health,description_raw,levelup_description_raw,artist_name,name,card_code,
