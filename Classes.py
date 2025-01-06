@@ -1,12 +1,9 @@
-import json
-import pickle
-
 class NoBPlus:
     def __init__(self, grau, is_folha=True):
         self.grau = grau              # Grau mínimo do nó
         self.is_folha = is_folha      # Indica se o nó é folha
         self.chaves = []              # Lista de chaves
-        self.dados = []               # Lista de dados (só para nós folhas)
+        self.dados = []               # Lista de dados por chave (só para nós folhas)
         self.filhos = []              # Lista de ponteiros para filhos (usado em nós internos)
         self.proximo = None           # Ponteiro para o próximo nó folha (usado em nós folhas)
 
@@ -40,37 +37,57 @@ class ArvoreBPlus:
 
     def _inserir_nao_cheio(self, no, chave, dado):
         if no.is_folha:
+            # Encontre a posição onde a chave deve ser inserida
             i = len(no.chaves) - 1
             while i >= 0 and chave < no.chaves[i]:
                 i -= 1
-            no.chaves.insert(i + 1, chave)
-            no.dados.insert(i + 1, dado)
+
+            # Verifique se a chave já existe
+            if i >= 0 and no.chaves[i] == chave:
+                # Se a chave existe, anexe o dado à lista de dados correspondente
+                no.dados[i].append(dado)
+            else:
+                # Insira a chave e inicialize a lista de dados
+                no.chaves.insert(i + 1, chave)
+                no.dados.insert(i + 1, [dado])
         else:
+            # Encontre o filho onde a chave deve ser inserida
             i = len(no.chaves) - 1
             while i >= 0 and chave < no.chaves[i]:
                 i -= 1
             i += 1
+
+            # Divida o nó filho se estiver cheio
             if len(no.filhos[i].chaves) == (2 * self.grau) - 1:
                 self._dividir_no(no, i, no.filhos[i])
                 if chave > no.chaves[i]:
                     i += 1
+
+            # Continue a inserção no nó filho
             self._inserir_nao_cheio(no.filhos[i], chave, dado)
 
     def _dividir_no(self, pai, indice, no):
         grau = self.grau
         novo_no = NoBPlus(grau, is_folha=no.is_folha)
+
+        # Atualize as chaves e filhos do nó pai
         pai.chaves.insert(indice, no.chaves[grau - 1])
         pai.filhos.insert(indice + 1, novo_no)
 
+        # Divida as chaves entre os dois nós
         novo_no.chaves = no.chaves[grau:]
         no.chaves = no.chaves[:grau - 1]
 
         if not no.is_folha:
+            # Divida os filhos entre os dois nós
             novo_no.filhos = no.filhos[grau:]
             no.filhos = no.filhos[:grau]
         else:
+            # Divida os dados entre os dois nós
             novo_no.dados = no.dados[grau:]
             no.dados = no.dados[:grau - 1]
+
+            # Atualize os ponteiros dos nós folha
             novo_no.proximo = no.proximo
             no.proximo = novo_no
 
@@ -166,18 +183,20 @@ class ColecaoDeCartas:
     def carrega_carta_por_nome_Indexada(arquivo_binario, arquivo_indice, nome_carta):
         arvore_b_plus = ArvoreBPlus.carrega_arvore_b_plus(arquivo_indice)
         posicao_no_arquivo = arvore_b_plus.buscar(nome_carta)
+        nova_colecao = ColecaoDeCartas()
     
         if posicao_no_arquivo is None:
             # Se a carta não for encontrada no índice, retorna None
             print(f"Carta com nome '{nome_carta}' não encontrada no índice.")
             return None
-    
+
+        for posicao in posicao_no_arquivo:
         # Abre o arquivo binário para leitura
-        with open(arquivo_binario, 'rb') as f:
-            for i in range(posicao_no_arquivo):
-              carta_obj = pickle.load(f)
-    
-            return carta_obj
+          with open(arquivo_binario, 'rb') as f:
+              for i in range(posicao):
+                carta_obj = pickle.load(f)
+          nova_colecao.adicionar_carta(carta_obj)
+        return nova_colecao
 
     def carrega_carta(self,dados_json):
         carta = Card(
@@ -213,3 +232,6 @@ class ColecaoDeCartas:
         for obj in json_data:
             carta_obj = self.carrega_carta(obj)
             self.adicionar_carta(carta_obj)
+
+    def __repr__(self):
+        return f"ColecaoDeCartas(cartas={self.cartas})"
