@@ -71,6 +71,15 @@ class ArvoreBPlus:
             novo_no.proximo = no.proximo
             no.proximo = novo_no
 
+    def salva_arvore_b_plus(self, arquivo_binario):
+        with open(arquivo_binario, 'wb') as f:
+          pickle.dump(self, f)
+
+    def carrega_arvore_b_plus(arquivo_binario):
+      with open(arquivo_binario, 'rb') as f:
+          arvore_b_plus = pickle.load(f)
+      return arvore_b_plus
+
 class Card:
     def __init__(
         self,
@@ -140,3 +149,29 @@ class ColecaoDeCartas:
     def listar_cartas(self):
         for carta_obj in self.cartas:
             print(f"Nome: {carta_obj.name}, Custo: {carta_obj.cost}, Descrição: {carta_obj.description_raw}")
+    
+    def salva_cartas_com_indice(self, arquivo_binario, arvore_b_plus):
+        with open(arquivo_binario, 'wb') as f:
+            i = 1
+            for carta_obj in self.cartas:
+                pickle.dump(carta_obj, f)
+    
+                # Insere a chave (nome da carta) e a posição no índice (árvore B+)
+                arvore_b_plus.inserir(carta_obj.name, i)
+                i += 1
+                
+    def carrega_carta_por_nome_Indexada(arquivo_binario, arquivo_indice, nome_carta):
+        arvore_b_plus = ArvoreBPlus.carrega_arvore_b_plus(arquivo_indice)
+        posicao_no_arquivo = arvore_b_plus.buscar(nome_carta)
+    
+        if posicao_no_arquivo is None:
+            # Se a carta não for encontrada no índice, retorna None
+            print(f"Carta com nome '{nome_carta}' não encontrada no índice.")
+            return None
+    
+        # Abre o arquivo binário para leitura
+        with open(arquivo_binario, 'rb') as f:
+            for i in range(posicao_no_arquivo):
+              carta_obj = pickle.load(f)
+    
+            return carta_obj
