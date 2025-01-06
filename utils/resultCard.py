@@ -1,9 +1,11 @@
 import tkinter as tk
 from utils.navigationFunctions import switchPage
 from pages.detailedPage import detailedCard
-def resultCard(parent):
+from gera_arquivo_e_arvore import carta
+def resultCard(parent, data:carta):
+
     resultFrame = tk.Frame(master=parent)
-    nameLabel =tk.Label(resultFrame, text= "colocar aqui as img da carta")
+    nameLabel =tk.Label(resultFrame, text= data.name)
     btn = tk.Button(resultFrame, text="detalhes", command=lambda: switchPage(resultFrame, detailedCard, parent))
 
     

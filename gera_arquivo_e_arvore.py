@@ -170,9 +170,9 @@ def carrega_carta_por_indice(arquivo_binario, arvore_b_plus, card_code):
 colecao = ColecaoDeCartas()
 arvore_b_plus = ArvoreBPlus(grau=3)
 
-caminho_arquivo = '/content/exj.json'
+caminho_arquivo = './data/set1-en_us.json'
 
-with open(caminho_arquivo, 'r') as arquivo:
+with open(caminho_arquivo, 'r', encoding="utf-8") as arquivo:
     json_data = json.load(arquivo)
 
 for obj in json_data:
