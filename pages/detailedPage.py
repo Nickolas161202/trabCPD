@@ -1,5 +1,5 @@
 import tkinter as tk
-from CardStruct import Card
+from Classes import Card
 
 def detailedCard(parent, data:Card):
     detailedFrame = tk.Frame(master=parent)

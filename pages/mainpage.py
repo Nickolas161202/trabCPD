@@ -3,6 +3,11 @@ import tkinter as tk
 from pages.advanced import AdvancedScreen
 from utils.navigationFunctions import switchPage
 from pages.resultPage import resultPage
+
+def getName(param):
+    name = param.get()
+    print(name)
+
 def mainPage(parent):
     mainFrame = tk.Frame(master= parent)
     w = tk.Label(mainFrame, text='Bem Vindo ao LoR Finder!')
@@ -15,4 +20,4 @@ def mainPage(parent):
     searchbtn.pack()
     inputLabel.pack()
     btn.pack()
-    mainFrame.pack()
+    mainFrame.pack(fill="both")

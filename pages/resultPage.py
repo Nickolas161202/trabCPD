@@ -1,6 +1,6 @@
 import tkinter as tk
 from utils.resultCard import resultCard
-from CardStruct import Card
+from Classes import Card
 
 
 def getSearchData(): 
@@ -18,7 +18,7 @@ def getSearchData():
         game_absolute_path="http://dd.b.pvp.net/5_12_0/set5/en_us/img/cards/05BC029.png",
         rarity="Champion",
         expansion="Set5",
-        cardType="Unit",
+        card_type="Unit",
         subtypes=["FAE", "CAT"],
         supertype="Champion",
         flavor_text=""
@@ -37,7 +37,7 @@ def getSearchData():
         game_absolute_path="http://dd.b.pvp.net/5_12_0/set5/en_us/img/cards/05BC029.png",
         rarity="Champion",
         expansion="Set 1",
-        cardType="Unit",
+        card_type="Unit",
         subtypes=["Elite"],
         supertype="Champion",
         flavor_text="Her strength is rivaled only by her discipline."
@@ -45,15 +45,31 @@ def getSearchData():
     return data
 def resultPage(parent):
     data = getSearchData()
+    
     resultFrame = tk.Frame(master=parent)
+    resultFrame.grid(row=0, column=0, sticky="nsew")  # Using grid instead of pack
+    
+    canvas = tk.Canvas(resultFrame)
+    canvas.grid(row=0, column=0, sticky="nsew")  # Canvas inside the frame
+    
+    scr = tk.Scrollbar(resultFrame, orient="vertical", command=canvas.yview)
+    scr.grid(row=0, column=1, sticky="ns")  # Scrollbar alongside the canvas
+    
+    canvas.configure(yscrollcommand=scr.set)
+    canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+    
+    secondFrame = tk.Frame(canvas)
+    canvas.create_window((0, 0), window=secondFrame, anchor="nw")
+    
     if len(data) == 0:
-        noResult =tk.Label(resultFrame, text="Não há nenhum resultado!")
+        noResult = tk.Label(secondFrame, text="Não há nenhum resultado!")
         noResult.pack()
     else:
-        for i in data:
-            resultCard(resultFrame, i)
-
-
-
-
-    resultFrame.pack()
+        for item in  data:  # Dynamic loop based on data length
+            resultCard(secondFrame, item)  # Adding each result
+    
+    # Make sure the parent can resize properly
+    resultFrame.grid_rowconfigure(0, weight=1)
+    resultFrame.grid_columnconfigure(0, weight=1)
+    
+    resultFrame.pack(fill="both")

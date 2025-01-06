@@ -1,7 +1,7 @@
 import tkinter as tk
 from utils.navigationFunctions import goToDetailedPage
 from pages.detailedPage import detailedCard
-from CardStruct import Card
+from Classes import Card
 import urllib.request
 from PIL import ImageTk, Image
 import io
@@ -29,8 +29,8 @@ def resultCard(parent, data: Card):
 
     btn = tk.Button(resultFrame, text="detalhes", command=lambda: goToDetailedPage(resultFrame, detailedCard, parent, data))
 
-    nameLabel.pack()
-    btn.pack()
-    imgLabel.pack()
+    nameLabel.grid(row=0, column=0)
+    btn.grid(row=1, column=0)
+    imgLabel.grid(row=2, column= 0)
 
     resultFrame.pack()

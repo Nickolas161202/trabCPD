@@ -1,3 +1,6 @@
+import pickle
+import json
+
 class NoBPlus:
     def __init__(self, grau, is_folha=True):
         self.grau = grau              # Grau mínimo do nó
