@@ -62,7 +62,7 @@ def exibir_pickle(nomeArquivo):
     for carta in cartas_restauradas:
         print(carta)
 
-def main():
+def teste():
     Yuumi = Card(
                 "Yuumi",("Bandle City", "Targon"), 3, 2, 1,
 				 "Round Start: Grant the unit I'm Attached to +1|+1. Otherwise, grant me +1|+1 instead.", 
@@ -96,6 +96,9 @@ def main():
     cartas = [Yuumi, Fiora]
 
     salvar_cartas_em_pickle(cartas, nomeArquivo)
+
+if __name__ == "__teste__":
+    teste()
 
 # Exemplo de uso
 
