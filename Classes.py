@@ -127,3 +127,16 @@ class Card:
             f"Associated Cards = {self.associated_cards!r},\n Associated Indexes = {self.associated_indexes!r} \n)"
         )
 
+class ColecaoDeCartas:
+    def __init__(self):
+        self.cartas = []
+
+    def adicionar_carta(self, carta_obj):
+        self.cartas.append(carta_obj)
+
+    def retorna_colecao(self):
+        return self.cartas
+
+    def listar_cartas(self):
+        for carta_obj in self.cartas:
+            print(f"Nome: {carta_obj.name}, Custo: {carta_obj.cost}, Descrição: {carta_obj.description_raw}")
