@@ -5,13 +5,14 @@ from utils.navigationFunctions import *
 from pages.resultPage import resultPage
 from Classes import *
 def getName(param):
-    name = param.get().capitalize()
+    name = param.get().title()
     # testando carregar as Trie
     set1 = ColecaoDeCartas()
     arvore_codes = Trie()  # Trie para códigos
     arvore_nomes = Trie()  # Trie para nomes
     arquivos = Filenames()
     arvore_codes.carrega_arvore_trie(arquivos.codes)
+    arvore_nomes.carrega_arvore_trie(arquivos.nomes)
 
     # Testando com nome
     resultado = ColecaoDeCartas.carrega_carta_Indexada(arquivos, name, "nome")

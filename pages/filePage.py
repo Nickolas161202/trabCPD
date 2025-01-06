@@ -25,7 +25,7 @@ def filePage(parent):
     file_frame.columnconfigure(0, weight=1)
 
     Label =tk.Label(file_frame, text= "escolha a pasta de dados json caso queira um novo arquivo binário")
-    dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos, parent))
+    dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos))
     Label.grid(row=0, column=1,pady=2)
     dataBtn.grid(row=1, column=1)
 

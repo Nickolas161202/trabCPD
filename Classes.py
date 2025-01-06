@@ -199,7 +199,7 @@ class ColecaoDeCartas:
 
     def le_arquivo_json(self, arquivo):
       try:
-          with open(arquivo, 'r') as f:
+          with open(arquivo, 'r', encoding="utf-8") as f:
               json_data = json.load(f)
       except Exception as e:
           print(f"Erro ao abrir JSON: {e}")
