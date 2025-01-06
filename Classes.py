@@ -1,3 +1,6 @@
+import json
+import pickle
+
 class NoBPlus:
     def __init__(self, grau, is_folha=True):
         self.grau = grau              # Grau mínimo do nó
@@ -199,3 +202,14 @@ class ColecaoDeCartas:
             associated_cards=dados_json.get('associatedCardRefs',[])
             )
         return carta
+
+    def le_arquivo_json(self,arquivo):
+        try:
+          with open(arquivo, 'r') as arquivo:
+              json_data = json.load(arquivo)
+        except Exception as e:
+          print(f"Erro abrir json: {e}")
+    
+        for obj in json_data:
+            carta_obj = self.carrega_carta(obj)
+            self.adicionar_carta(carta_obj)
