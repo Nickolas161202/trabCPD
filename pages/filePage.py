@@ -5,7 +5,7 @@ from tkinter import filedialog
 from pathlib import Path
 from pages.mainpage import mainPage
 from Classes import *
-def openFile(arquivos):
+def openFile(arquivos, actualframe, newFrame, parent):
     filename = filedialog.askopenfilename() #salva o diretório da pasta
     set1 = ColecaoDeCartas()
     trie_codes = Trie()  # Trie para códigos
@@ -16,6 +16,7 @@ def openFile(arquivos):
 # Salva a Trie para  códigos e nomes
     trie_codes.salva_arvore_trie(arquivos.codes)
     trie_nomes.salva_arvore_trie(arquivos.nomes)
+    switchPage(actualframe, newFrame, parent)
 
 
 def filePage(parent):
@@ -25,7 +26,7 @@ def filePage(parent):
     file_frame.columnconfigure(0, weight=1)
 
     Label =tk.Label(file_frame, text= "escolha a pasta de dados json caso queira um novo arquivo binário")
-    dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos))
+    dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos, file_frame, filePage, parent))
     Label.grid(row=0, column=1,pady=2)
     dataBtn.grid(row=1, column=1)
 
