@@ -1,6 +1,6 @@
 import tkinter as tk
 from utils.resultCard import resultCard
-from Classes import Card
+from Classes import *
 
 
 def getSearchData(): 
@@ -43,8 +43,8 @@ def getSearchData():
         flavor_text="Her strength is rivaled only by her discipline."
     )]
     return data
-def resultPage(parent):
-    data = getSearchData()
+def resultPage(parent, data:list):
+    
     
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  # Using grid instead of pack
@@ -71,5 +71,4 @@ def resultPage(parent):
     # Make sure the parent can resize properly
     resultFrame.grid_rowconfigure(0, weight=1)
     resultFrame.grid_columnconfigure(0, weight=1)
-    
     resultFrame.pack(fill="both")

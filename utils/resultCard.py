@@ -1,5 +1,5 @@
 import tkinter as tk
-from utils.navigationFunctions import goToDetailedPage
+from utils.navigationFunctions import switchPageWithData
 from pages.detailedPage import detailedCard
 from Classes import Card
 import urllib.request
@@ -27,7 +27,7 @@ def resultCard(parent, data: Card):
     imgLabel = tk.Label(resultFrame, image=img)
     imgLabel.image = img  # This ensures that the image is kept in memory
 
-    btn = tk.Button(resultFrame, text="detalhes", command=lambda: goToDetailedPage(resultFrame, detailedCard, parent, data))
+    btn = tk.Button(resultFrame, text="detalhes", command=lambda: switchPageWithData(resultFrame, detailedCard, parent, data))
 
     nameLabel.grid(row=0, column=0)
     btn.grid(row=1, column=0)
