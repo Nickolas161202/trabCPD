@@ -215,3 +215,18 @@ class ColecaoDeCartas:
         for carta in self.cartas:
             print(carta)
         return ""
+
+    def le_pasta_json(self,pasta):
+      try:
+        arquivos = [f for f in os.listdir(pasta) if f.endswith('.json')]
+
+        if not arquivos:
+          print("Nenhum arquivo encontrado!")
+          return
+        
+        for arq in arquivos:
+          caminho_arq = os.path.join(pasta, arq)
+          print(f"Lendo arquivo: {caminho_arq}")
+          self.le_arquivo_json(caminho_arq)
+      except Exception as e:
+        print(f"Erro ao abrir pasta: {e}")
