@@ -104,7 +104,7 @@ class Card:
     def __init__(
         self,
         name: str,
-        regions: list,
+        regions: list = None,
         cost: int = 0,
         attack: int = 0,
         health: int = 0,
@@ -155,6 +155,26 @@ class Card:
             f"Supertype = {self.supertype!r},\n Flavor Text = {self.flavor_text!r},\n Card Code = {self.card_code!r},\n "
             f"Associated Cards = {self.associated_cards!r},\n Associated Indexes = {self.associated_indexes!r} \n)"
         )
+    def carrega_carta(self,dados_json):
+        self.name=dados_json.get('name'),
+        self.regions=dados_json.get('regions', []),
+        self.cost=dados_json.get('cost', 0),
+        self.attack=dados_json.get('attack', 0),
+        self.health=dados_json.get('health', 0),
+        self.description_raw=dados_json.get('descriptionRaw', ''),
+        self.levelup_description_raw=dados_json.get('levelupDescriptionRaw', ''),
+        self.keywords=dados_json.get('keywords', []),
+        self.artist=dados_json.get('artistName', ''),
+        self.spell_speed=dados_json.get('spellSpeed', ''),
+        self.game_absolute_path=dados_json['assets'][0].get('gameAbsolutePath', '') if 'assets' in dados_json and len(dados_json['assets']) > 0 else '',
+        self.rarity=dados_json.get('rarity', ''),
+        self.expansion=dados_json.get('set', ''),
+        self.card_type=dados_json.get('type', ''),
+        self.subtypes=dados_json.get('subtypes', []),
+        self.supertype=dados_json.get('supertype', ''),
+        self.flavor_text=dados_json.get('flavorText', ''),
+        self.card_code=dados_json.get('cardCode', ''),
+        self.associated_cards=dados_json.get('associatedCardRefs',[])
 
 class ColecaoDeCartas:
     def __init__(self):
@@ -198,30 +218,6 @@ class ColecaoDeCartas:
           nova_colecao.adicionar_carta(carta_obj)
         return nova_colecao
 
-    def carrega_carta(self,dados_json):
-        carta = Card(
-            name=dados_json.get('name'),
-            regions=dados_json.get('regions', []),
-            cost=dados_json.get('cost', 0),
-            attack=dados_json.get('attack', 0),
-            health=dados_json.get('health', 0),
-            description_raw=dados_json.get('descriptionRaw', ''),
-            levelup_description_raw=dados_json.get('levelupDescriptionRaw', ''),
-            keywords=dados_json.get('keywords', []),
-            artist=dados_json.get('artistName', ''),
-            spell_speed=dados_json.get('spellSpeed', ''),
-            game_absolute_path=dados_json['assets'][0].get('gameAbsolutePath', '') if 'assets' in dados_json and len(dados_json['assets']) > 0 else '',
-            rarity=dados_json.get('rarity', ''),
-            expansion=dados_json.get('set', ''),
-            card_type=dados_json.get('type', ''),
-            subtypes=dados_json.get('subtypes', []),
-            supertype=dados_json.get('supertype', ''),
-            flavor_text=dados_json.get('flavorText', ''),
-            card_code=dados_json.get('cardCode', ''),
-            associated_cards=dados_json.get('associatedCardRefs',[])
-            )
-        return carta
-
     def le_arquivo_json(self,arquivo):
         try:
           with open(arquivo, 'r') as arquivo:
@@ -230,7 +226,8 @@ class ColecaoDeCartas:
           print(f"Erro abrir json: {e}")
     
         for obj in json_data:
-            carta_obj = self.carrega_carta(obj)
+            carta = Card(name='tmp')
+            carta_obj = carta.carrega_carta(obj)
             self.adicionar_carta(carta_obj)
 
     def __repr__(self):
