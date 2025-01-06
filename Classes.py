@@ -1,109 +1,60 @@
-class NoBPlus:
-    def __init__(self, grau, is_folha=True):
-        self.grau = grau              # Grau mínimo do nó
-        self.is_folha = is_folha      # Indica se o nó é folha
-        self.chaves = []              # Lista de chaves
-        self.dados = []               # Lista de dados por chave (só para nós folhas)
-        self.filhos = []              # Lista de ponteiros para filhos (usado em nós internos)
-        self.proximo = None           # Ponteiro para o próximo nó folha (usado em nós folhas)
+import json
+import pickle
 
-class ArvoreBPlus:
-    def __init__(self, grau=3):
-        self.raiz = NoBPlus(grau)
-        self.grau = grau
+class Filenames:
+    def __init__(self):
+        self.cards = "cartas.pkl"
+        self.nomes = "arvore_nomes.pkl"
+        self.codes = "arvore_codes.pkl"
 
-    def buscar(self, chave):
-        no_atual = self.raiz
-        while not no_atual.is_folha:
-            i = 0
-            while i < len(no_atual.chaves) and chave >= no_atual.chaves[i]:
-                i += 1
-            no_atual = no_atual.filhos[i]
+    def __repr__(self):
+        return f"Filenames(cards={self.cards}, nomes={self.nomes}, codes={self.codes})"
 
-        # Buscar a chave no nó folha
-        if chave in no_atual.chaves:
-            return no_atual.dados[no_atual.chaves.index(chave)]
-        return None
+class TrieNode:
+    def __init__(self):
+        self.children = {}  # Armazena os filhos do nó (cada filho é um caractere)
+        self.posicoes = []  # Lista de posições dos dados no arquivo
 
-    def inserir(self, chave, dado):
-        raiz = self.raiz
-        if len(raiz.chaves) == (2 * self.grau) - 1:
-            nova_raiz = NoBPlus(self.grau, is_folha=False)
-            nova_raiz.filhos.append(self.raiz)
-            self._dividir_no(nova_raiz, 0, self.raiz)
-            self.raiz = nova_raiz
+        
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()  # Raiz da Trie
 
-        self._inserir_nao_cheio(self.raiz, chave, dado)
+    def inserir(self, palavra, posicao):
+        no_atual = self.root
+        for char in palavra:
+            if char not in no_atual.children:
+                no_atual.children[char] = TrieNode()
+            no_atual = no_atual.children[char]
+        no_atual.posicoes.append(posicao)
 
-    def _inserir_nao_cheio(self, no, chave, dado):
-        if no.is_folha:
-            # Encontre a posição onde a chave deve ser inserida
-            i = len(no.chaves) - 1
-            while i >= 0 and chave < no.chaves[i]:
-                i -= 1
+    def buscar(trie, palavra):
+        no_atual: TrieNode = trie.root
+        for char in palavra:
+            if char not in no_atual.children:
+                return None  # Se a palavra não for encontrada
+            no_atual = no_atual.children[char]
+        return no_atual.posicoes  # Retorna as posições encontradas
 
-            # Verifique se a chave já existe
-            if i >= 0 and no.chaves[i] == chave:
-                # Se a chave existe, anexe o dado à lista de dados correspondente
-                no.dados[i].append(dado)
-            else:
-                # Insira a chave e inicialize a lista de dados
-                no.chaves.insert(i + 1, chave)
-                no.dados.insert(i + 1, [dado])
-        else:
-            # Encontre o filho onde a chave deve ser inserida
-            i = len(no.chaves) - 1
-            while i >= 0 and chave < no.chaves[i]:
-                i -= 1
-            i += 1
-
-            # Divida o nó filho se estiver cheio
-            if len(no.filhos[i].chaves) == (2 * self.grau) - 1:
-                self._dividir_no(no, i, no.filhos[i])
-                if chave > no.chaves[i]:
-                    i += 1
-
-            # Continue a inserção no nó filho
-            self._inserir_nao_cheio(no.filhos[i], chave, dado)
-
-    def _dividir_no(self, pai, indice, no):
-        grau = self.grau
-        novo_no = NoBPlus(grau, is_folha=no.is_folha)
-
-        # Atualize as chaves e filhos do nó pai
-        pai.chaves.insert(indice, no.chaves[grau - 1])
-        pai.filhos.insert(indice + 1, novo_no)
-
-        # Divida as chaves entre os dois nós
-        novo_no.chaves = no.chaves[grau:]
-        no.chaves = no.chaves[:grau - 1]
-
-        if not no.is_folha:
-            # Divida os filhos entre os dois nós
-            novo_no.filhos = no.filhos[grau:]
-            no.filhos = no.filhos[:grau]
-        else:
-            # Divida os dados entre os dois nós
-            novo_no.dados = no.dados[grau:]
-            no.dados = no.dados[:grau - 1]
-
-            # Atualize os ponteiros dos nós folha
-            novo_no.proximo = no.proximo
-            no.proximo = novo_no
-
-    def salva_arvore_b_plus(self, arquivo_binario):
+    def salva_arvore_trie(self, arquivo_binario):
         with open(arquivo_binario, 'wb') as f:
-          pickle.dump(self, f)
+            pickle.dump(self, f)
 
-    def carrega_arvore_b_plus(arquivo_binario):
-      with open(arquivo_binario, 'rb') as f:
-          arvore_b_plus = pickle.load(f)
-      return arvore_b_plus
+    def carrega_arvore_trie(self, arquivo_binario):
+        with open(arquivo_binario, 'rb') as f:
+            # Load the saved Trie object
+            loaded_trie = pickle.load(f)  
+            # Update the current Trie's root with the loaded Trie's root
+            self.root = loaded_trie.root
+
+    def __str__(self):
+        return f"Trie(root={self.root})"
+
 
 class Card:
     def __init__(
         self,
-        name: str,
+        name: str = "",
         regions: list = None,
         cost: int = 0,
         attack: int = 0,
@@ -143,7 +94,31 @@ class Card:
         self.flavor_text = flavor_text
         self.card_code = card_code
         self.associated_cards = associated_cards if associated_cards is not None else []
-        self.associated_indexes = associated_indexes if associated_indexes is not None else []
+
+    def carrega_carta(self, dados_json):
+        self.name = dados_json.get('name')
+        self.regions = dados_json.get('regions', [])
+        self.cost = dados_json.get('cost', 0)
+        self.attack = dados_json.get('attack', 0)
+        self.health = dados_json.get('health', 0)
+        self.description_raw = dados_json.get('descriptionRaw', '')
+        self.levelup_description_raw = dados_json.get('levelupDescriptionRaw', '')
+        self.keywords = dados_json.get('keywords', [])
+        self.artist = dados_json.get('artistName', '')
+        self.spell_speed = dados_json.get('spellSpeed', '')
+        self.game_absolute_path = (
+            dados_json['assets'][0].get('gameAbsolutePath', '')
+            if 'assets' in dados_json and len(dados_json['assets']) > 0
+            else ''
+        )
+        self.rarity = dados_json.get('rarity', '')
+        self.expansion = dados_json.get('set', '')
+        self.card_type = dados_json.get('type', '')
+        self.subtypes = dados_json.get('subtypes', [])
+        self.supertype = dados_json.get('supertype', '')
+        self.flavor_text = dados_json.get('flavorText', '')
+        self.card_code = dados_json.get('cardCode', '')
+        self.associated_cards = dados_json.get('associatedCardRefs', [])
 
     def __repr__(self):
         return (
@@ -153,28 +128,8 @@ class Card:
             f"Artist = {self.artist!r},\n Spell Speed = {self.spell_speed!r},\n Image Link = {self.game_absolute_path!r},\n "
             f"Rarity = {self.rarity!r},\n Expansion = {self.expansion!r},\n Card Type = {self.card_type!r},\n Subtypes = {self.subtypes!r},\n "
             f"Supertype = {self.supertype!r},\n Flavor Text = {self.flavor_text!r},\n Card Code = {self.card_code!r},\n "
-            f"Associated Cards = {self.associated_cards!r},\n Associated Indexes = {self.associated_indexes!r} \n)"
+            f"Associated Cards = {self.associated_cards!r}\n)"
         )
-    def carrega_carta(self,dados_json):
-        self.name=dados_json.get('name'),
-        self.regions=dados_json.get('regions', []),
-        self.cost=dados_json.get('cost', 0),
-        self.attack=dados_json.get('attack', 0),
-        self.health=dados_json.get('health', 0),
-        self.description_raw=dados_json.get('descriptionRaw', ''),
-        self.levelup_description_raw=dados_json.get('levelupDescriptionRaw', ''),
-        self.keywords=dados_json.get('keywords', []),
-        self.artist=dados_json.get('artistName', ''),
-        self.spell_speed=dados_json.get('spellSpeed', ''),
-        self.game_absolute_path=dados_json['assets'][0].get('gameAbsolutePath', '') if 'assets' in dados_json and len(dados_json['assets']) > 0 else '',
-        self.rarity=dados_json.get('rarity', ''),
-        self.expansion=dados_json.get('set', ''),
-        self.card_type=dados_json.get('type', ''),
-        self.subtypes=dados_json.get('subtypes', []),
-        self.supertype=dados_json.get('supertype', ''),
-        self.flavor_text=dados_json.get('flavorText', ''),
-        self.card_code=dados_json.get('cardCode', ''),
-        self.associated_cards=dados_json.get('associatedCardRefs',[])
 
 class ColecaoDeCartas:
     def __init__(self):
@@ -189,46 +144,71 @@ class ColecaoDeCartas:
     def listar_cartas(self):
         for carta_obj in self.cartas:
             print(f"Nome: {carta_obj.name}, Custo: {carta_obj.cost}, Descrição: {carta_obj.description_raw}")
-    
-    def salva_cartas_com_indice(self, arquivo_binario, arvore_b_plus):
-        with open(arquivo_binario, 'wb') as f:
-            i = 1
-            for carta_obj in self.cartas:
-                pickle.dump(carta_obj, f)
-    
-                # Insere a chave (nome da carta) e a posição no índice (árvore B+)
-                arvore_b_plus.inserir(carta_obj.name, i)
-                i += 1
-                
-    def carrega_carta_por_nome_Indexada(arquivo_binario, arquivo_indice, nome_carta):
-        arvore_b_plus = ArvoreBPlus.carrega_arvore_b_plus(arquivo_indice)
-        posicao_no_arquivo = arvore_b_plus.buscar(nome_carta)
+
+    def salva_cartas_com_indice(self, arquivo_binario, arvore_nome, arvore_code):
+        try:
+            with open(arquivo_binario, 'wb') as f:
+                for carta_obj in self.retorna_colecao():
+                    dados_serializados = pickle.dumps(carta_obj)
+                    posicao_atual = f.tell()  # Captura a posição onde o dado será armazenado
+                    f.write(dados_serializados)
+
+                    # Insere o índice (chave) no índice B+ para código
+                    arvore_code.inserir(carta_obj.card_code, posicao_atual)
+
+                    # Insere o índice (chave) na Trie para nome
+                    arvore_nome.inserir(carta_obj.name, posicao_atual)
+        except Exception as e:
+            print(f"Erro ao salvar cartas com índice: {e}")
+
+    def carrega_carta_Indexada(filenames, parametro, nome_ou_codigo):
+        arvore_trie = Trie()
+        # Se a busca for pelo nome, usamos a Trie
+        if nome_ou_codigo == "nome":
+            arvore_trie.carrega_arvore_trie(filenames.nomes)
+        elif nome_ou_codigo == "codigo":
+            arvore_trie.carrega_arvore_trie(filenames.codes)
+        posicao_no_arquivo = arvore_trie.buscar(parametro)
+        print(posicao_no_arquivo)
+        
         nova_colecao = ColecaoDeCartas()
-    
+
         if posicao_no_arquivo is None:
             # Se a carta não for encontrada no índice, retorna None
-            print(f"Carta com nome '{nome_carta}' não encontrada no índice.")
+            print(f"Carta com {nome_ou_codigo} '{parametro}' não encontrada no índice.")
             return None
 
-        for posicao in posicao_no_arquivo:
-        # Abre o arquivo binário para leitura
-          with open(arquivo_binario, 'rb') as f:
-              for i in range(posicao):
-                carta_obj = pickle.load(f)
-          nova_colecao.adicionar_carta(carta_obj)
+        # Se houver várias posições para a chave, percorre todas
+        if isinstance(posicao_no_arquivo, list):  # Caso seja uma lista de posições
+            for posicao in posicao_no_arquivo:
+                with open(filenames.cards, 'rb') as f:
+                    f.seek(posicao)  # Vai até a posição onde o dado da carta está armazenado
+                    dados_serializados = f.read()
+                    carta_obj = pickle.loads(dados_serializados)
+                    nova_colecao.adicionar_carta(carta_obj)
+        else:
+            # Se houver apenas uma posição, carrega a carta diretamente
+            with open(filenames.cards, 'rb') as f:
+                f.seek(posicao_no_arquivo)  # Vai até a posição
+                dados_serializados = f.read()
+                carta_obj = pickle.loads(dados_serializados)
+                nova_colecao.adicionar_carta(carta_obj)
+
         return nova_colecao
 
-    def le_arquivo_json(self,arquivo):
-        try:
-          with open(arquivo, 'r') as arquivo:
-              json_data = json.load(arquivo)
-        except Exception as e:
-          print(f"Erro abrir json: {e}")
-    
-        for obj in json_data:
-            carta = Card(name='tmp')
-            carta_obj = carta.carrega_carta(obj)
-            self.adicionar_carta(carta_obj)
+    def le_arquivo_json(self, arquivo):
+      try:
+          with open(arquivo, 'r') as f:
+              json_data = json.load(f)
+      except Exception as e:
+          print(f"Erro ao abrir JSON: {e}")
+          return None
+
+      for obj in json_data:
+          carta_obj = Card()
+          carta_obj.carrega_carta(obj)
+          self.adicionar_carta(carta_obj)
+
 
     def __str__(self):
         print("Coleção de Cartas:\n")
