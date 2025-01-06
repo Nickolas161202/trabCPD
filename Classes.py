@@ -230,5 +230,8 @@ class ColecaoDeCartas:
             carta_obj = carta.carrega_carta(obj)
             self.adicionar_carta(carta_obj)
 
-    def __repr__(self):
-        return f"ColecaoDeCartas(cartas={self.cartas})"
+    def __str__(self):
+        print("Coleção de Cartas:\n")
+        for carta in self.cartas:
+            print(carta)
+        return ""
