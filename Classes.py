@@ -175,3 +175,27 @@ class ColecaoDeCartas:
               carta_obj = pickle.load(f)
     
             return carta_obj
+
+    def carrega_carta(self,dados_json):
+        carta = Card(
+            name=dados_json.get('name'),
+            regions=dados_json.get('regions', []),
+            cost=dados_json.get('cost', 0),
+            attack=dados_json.get('attack', 0),
+            health=dados_json.get('health', 0),
+            description_raw=dados_json.get('descriptionRaw', ''),
+            levelup_description_raw=dados_json.get('levelupDescriptionRaw', ''),
+            keywords=dados_json.get('keywords', []),
+            artist=dados_json.get('artistName', ''),
+            spell_speed=dados_json.get('spellSpeed', ''),
+            game_absolute_path=dados_json['assets'][0].get('gameAbsolutePath', '') if 'assets' in dados_json and len(dados_json['assets']) > 0 else '',
+            rarity=dados_json.get('rarity', ''),
+            expansion=dados_json.get('set', ''),
+            card_type=dados_json.get('type', ''),
+            subtypes=dados_json.get('subtypes', []),
+            supertype=dados_json.get('supertype', ''),
+            flavor_text=dados_json.get('flavorText', ''),
+            card_code=dados_json.get('cardCode', ''),
+            associated_cards=dados_json.get('associatedCardRefs',[])
+            )
+        return carta
