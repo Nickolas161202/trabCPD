@@ -146,6 +146,12 @@ class ColecaoDeCartas:
         for carta_obj in self.cartas:
             print(f"Nome: {carta_obj.name}, Custo: {carta_obj.cost}, Descrição: {carta_obj.description_raw}")
 
+    def adiciona_lista_cartas(self,lista_crds):
+        self.cartas = lista_crds
+
+    def limpa_lista_cartas(self):
+        self.cartas = []
+
     def salva_cartas_com_indice(self, arquivo_binario, arvore_nome, arvore_code):
         try:
             with open(arquivo_binario, 'wb') as f:
@@ -236,16 +242,43 @@ class ColecaoDeCartas:
         return ""
 
     def le_pasta_json(self,pasta):
-      try:
-        arquivos = [f for f in os.listdir(pasta) if f.endswith('.json')]
+          try:
+            arquivos = [f for f in os.listdir(pasta) if f.endswith('.json')]
+    
+            if not arquivos:
+              print("Nenhum arquivo encontrado!")
+              return
+            
+            for arq in arquivos:
+              caminho_arq = os.path.join(pasta, arq)
+              print(f"Lendo arquivo: {caminho_arq}")
+              self.le_arquivo_json(caminho_arq)
+          except Exception as e:
+            print(f"Erro ao abrir pasta: {e}")
 
-        if not arquivos:
-          print("Nenhum arquivo encontrado!")
-          return
-        
-        for arq in arquivos:
-          caminho_arq = os.path.join(pasta, arq)
-          print(f"Lendo arquivo: {caminho_arq}")
-          self.le_arquivo_json(caminho_arq)
-      except Exception as e:
-        print(f"Erro ao abrir pasta: {e}")
+    def filtra_colecao_simples(self,filtros):
+        nova_colecao = ColecaoDeCartas()
+        nova_colecao.adiciona_lista_cartas(self.cartas)
+
+        for chave, valor in filtros.items():
+          tmp = ColecaoDeCartas()
+          tmp.adiciona_lista_cartas(nova_colecao.cartas)
+          nova_colecao.limpa_lista_cartas()
+
+          if valor == ['Selecione a região'] or valor == [''] or valor == 'Selecionar' or valor == '':
+            nova_colecao.adiciona_lista_cartas(tmp.cartas)
+          else:
+            for crt in tmp.cartas:
+
+              if valor is not None:
+                  if isinstance(valor, list):
+                      atributo = getattr(crt, chave, [])
+                      if any(item in atributo for item in valor):
+                          nova_colecao.adicionar_carta(crt)
+                  else:
+                      if getattr(crt, chave, None) == valor:
+                          nova_colecao.adicionar_carta(crt)
+              else:
+                nova_colecao.adicionar_carta(crt)
+
+        return nova_colecao
