@@ -7,7 +7,6 @@ from Classes import *
 def getName(param):
     name = param.get().title()
     # testando carregar as Trie
-    set1 = ColecaoDeCartas()
     arvore_codes = Trie()  # Trie para códigos
     arvore_nomes = Trie()  # Trie para nomes
     arquivos = Filenames()
@@ -24,6 +23,7 @@ def getName(param):
 
 def getResults(param:tk.Entry, actualFrame, result, parent):
     data = getName(param)
+    print(data)
     switchPageWithData(actualFrame, result, parent, data)
 
 def mainPage(parent):

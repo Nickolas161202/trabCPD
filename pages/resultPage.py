@@ -44,7 +44,7 @@ def getSearchData():
     )]
     return data
 def resultPage(parent, data:list):
-    
+    print(data)
     
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  # Using grid instead of pack

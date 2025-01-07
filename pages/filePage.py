@@ -5,12 +5,13 @@ from tkinter import filedialog
 from pathlib import Path
 from pages.mainpage import mainPage
 from Classes import *
+
 def openFile(arquivos, actualframe, newFrame, parent):
-    filename = filedialog.askopenfilename() #salva o diretório da pasta
+    filename = filedialog.askdirectory() #salva o diretório da pasta
     set1 = ColecaoDeCartas()
     trie_codes = Trie()  # Trie para códigos
     trie_nomes = Trie()  # Trie para nomes
-    set1.le_arquivo_json(filename)
+    set1.le_pasta_json(filename)
 # Salvando os índices
     set1.salva_cartas_com_indice(arquivos.cards, trie_nomes, trie_codes)
 # Salva a Trie para  códigos e nomes
