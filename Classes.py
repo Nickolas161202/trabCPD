@@ -1,6 +1,6 @@
 import pickle
 import json
-
+import os
 class Filenames:
     def __init__(self):
         self.cards = "cartas.pkl"
@@ -171,13 +171,30 @@ class ColecaoDeCartas:
             arvore_trie.carrega_arvore_trie(filenames.codes)
         posicao_no_arquivo = arvore_trie.buscar(parametro)
         print(posicao_no_arquivo)
-
         nova_colecao = ColecaoDeCartas()
+
 
         if posicao_no_arquivo is None:
             # Se a carta não for encontrada no índice, retorna None
             print(f"Carta com {nome_ou_codigo} '{parametro}' não encontrada no índice.")
+            print(f"Carta com {nome_ou_codigo} '{parametro}' não encontrada no índice.")
             return None
+
+        # Se houver várias posições para a chave, percorre todas
+        if isinstance(posicao_no_arquivo, list):  # Caso seja uma lista de posições
+            for posicao in posicao_no_arquivo:
+                with open(filenames.cards, 'rb') as f:
+                    f.seek(posicao)  # Vai até a posição onde o dado da carta está armazenado
+                    dados_serializados = f.read()
+                    carta_obj = pickle.loads(dados_serializados)
+                    nova_colecao.adicionar_carta(carta_obj)
+        else:
+            # Se houver apenas uma posição, carrega a carta diretamente
+            with open(filenames.cards, 'rb') as f:
+                f.seek(posicao_no_arquivo)  # Vai até a posição
+                dados_serializados = f.read()
+                carta_obj = pickle.loads(dados_serializados)
+                nova_colecao.adicionar_carta(carta_obj)
 
         # Se houver várias posições para a chave, percorre todas
         if isinstance(posicao_no_arquivo, list):  # Caso seja uma lista de posições
@@ -211,8 +228,24 @@ class ColecaoDeCartas:
           self.adicionar_carta(carta_obj)
 
 
+
     def __str__(self):
         print("Coleção de Cartas:\n")
         for carta in self.cartas:
             print(carta)
         return ""
+
+    def le_pasta_json(self,pasta):
+      try:
+        arquivos = [f for f in os.listdir(pasta) if f.endswith('.json')]
+
+        if not arquivos:
+          print("Nenhum arquivo encontrado!")
+          return
+        
+        for arq in arquivos:
+          caminho_arq = os.path.join(pasta, arq)
+          print(f"Lendo arquivo: {caminho_arq}")
+          self.le_arquivo_json(caminho_arq)
+      except Exception as e:
+        print(f"Erro ao abrir pasta: {e}")
