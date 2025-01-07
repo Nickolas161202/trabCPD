@@ -71,7 +71,9 @@ def AdvancedScreen(parent):
     expansionDropdown = tk.OptionMenu(adv_frame, expansionVar, *expansions)
     expansionDropdown.pack()
 
-    rarityVar = tk.StringVar(value="Selecione a raridade (existem cartas sem raridade, neste caso selecionar NONE)")
+    rarityLabel  = tk.Label(adv_frame, text="Selecione a raridade (existem cartas sem raridade, neste caso selecionar NONE)")
+    rarityLabel.pack()
+    rarityVar = tk.StringVar(value="Selecionar")
     rarityDropdown = tk.OptionMenu(adv_frame, rarityVar, *rarities)
     rarityDropdown.pack()
 

@@ -23,7 +23,6 @@ def getName(param):
 
 def getResults(param:tk.Entry, actualFrame, result, parent):
     data = getName(param)
-    print(data)
     switchPageWithData(actualFrame, result, parent, data)
 
 def mainPage(parent):

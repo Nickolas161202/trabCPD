@@ -44,10 +44,9 @@ def getSearchData():
     )]
     return data
 def resultPage(parent, data:list):
-    print(data)
     
     resultFrame = tk.Frame(master=parent)
-    resultFrame.grid(row=0, column=0, sticky="nsew")  # Using grid instead of pack
+    resultFrame.grid(row=0, column=0, sticky="nsew")  
     
     canvas = tk.Canvas(resultFrame)
     canvas.grid(row=0, column=0, sticky="nsew")  # Canvas inside the frame
@@ -65,10 +64,9 @@ def resultPage(parent, data:list):
         noResult = tk.Label(secondFrame, text="Não há nenhum resultado!")
         noResult.pack()
     else:
-        for item in  data:  # Dynamic loop based on data length
-            resultCard(secondFrame, item)  # Adding each result
+        for item in  data: 
+            resultCard(secondFrame, item)  
     
     # Make sure the parent can resize properly
     resultFrame.grid_rowconfigure(0, weight=1)
     resultFrame.grid_columnconfigure(0, weight=1)
-    resultFrame.pack(fill="both")

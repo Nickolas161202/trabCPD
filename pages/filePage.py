@@ -21,27 +21,31 @@ def openFile(arquivos, actualframe, newFrame, parent):
 
 
 def filePage(parent):
-    arquivos = Filenames() #recebe os nomes 
-    file_frame = tk.Frame(master=parent)
-    file_frame.rowconfigure(0, weight=1)
-    file_frame.columnconfigure(0, weight=1)
+    
+    arquivos = Filenames() #recebe os nomes
 
-    Label =tk.Label(file_frame, text= "escolha a pasta de dados json caso queira um novo arquivo binário")
+    file_frame = tk.Frame(master=parent)
+    file_frame.columnconfigure((0,1,2), weight=1, uniform='a')
+    file_frame.rowconfigure((0,1,2), weight=1, uniform='a')
+
+
+    Label =tk.Label(file_frame, text= "Escolha a pasta de dados json caso queira um novo arquivo binário", font=('Arial', 12) )
+    Label.grid(row=0, column=0, sticky='se', padx=20, pady=20, columnspan=2)
+
     dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos, file_frame, filePage, parent))
-    Label.grid(row=0, column=1,pady=2)
-    dataBtn.grid(row=1, column=1)
+    dataBtn.grid(row=0, column=2, sticky='sw', pady=20)
 
     codeFilePath = Path(arquivos.codes)
     nameFilePath = Path(arquivos.nomes)
     cardFilePath = Path(arquivos.cards)
     if(codeFilePath.is_file() and nameFilePath.is_file() and cardFilePath.is_file()):
-        searchBtn = tk.Button(file_frame, text="Ir para a pesquisa!", command= lambda: switchPage(file_frame, mainPage, parent))
-        searchBtn.grid(row=2, column=1)
+        searchBtn = tk.Button(file_frame, text="Ir para a pesquisa!",  command= lambda: switchPage(file_frame, mainPage, parent))
+        searchBtn.grid(row=1, column=1, sticky='n')
     else:
         CautionLabel =tk.Label(file_frame, text= "Crie um arquivo binário válido!")
-        CautionLabel.grid(row=2, column=1)
+        CautionLabel.grid(row=1, column=1, sticky='n')
     
     
-    file_frame.grid(row= 0, column= 0,sticky="nsew", padx=10)
-    
+    file_frame.grid(row= 0, column= 0,sticky="nsew")
+
     

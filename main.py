@@ -7,7 +7,7 @@ from pages.filePage import filePage
 class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.pack(fill="x")
+        self.grid(sticky= "nsew")
 
 def backToMain(a, b):
     print(a.winfo_children())
@@ -23,7 +23,9 @@ def main():
     btn =  tk.Button(root, command= lambda: backToMain(main_frame, filePage), text="Voltar à página inicial")
     btn.grid(column=0, row=0)
     
-    main_frame = tk.Frame(root)  # Red background for main_frame
+    main_frame = tk.Frame(root ,bg="#0000FF")  # Red background for main_frame
+    main_frame.rowconfigure(0, weight=1)
+    main_frame.columnconfigure(0, weight=1)
     filePage(main_frame)
     main_frame.grid(row=1, column=2, sticky="nsew")  # Stretch main_frame to fill the root window
     
