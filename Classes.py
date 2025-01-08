@@ -257,28 +257,28 @@ class ColecaoDeCartas:
             print(f"Erro ao abrir pasta: {e}")
 
     def filtra_colecao_simples(self,filtros):
-        nova_colecao = ColecaoDeCartas()
-        nova_colecao.adiciona_lista_cartas(self.cartas)
+            nova_colecao = ColecaoDeCartas()
+            nova_colecao.adiciona_lista_cartas(self.cartas)
 
-        for chave, valor in filtros.items():
-          tmp = ColecaoDeCartas()
-          tmp.adiciona_lista_cartas(nova_colecao.cartas)
-          nova_colecao.limpa_lista_cartas()
+            for chave, valor in filtros.items():
+              tmp = ColecaoDeCartas()
+              tmp.adiciona_lista_cartas(nova_colecao.cartas)
+              nova_colecao.limpa_lista_cartas()
 
-          if valor == ['Selecione a região'] or valor == [''] or valor == 'Selecionar' or valor == '':
-            nova_colecao.adiciona_lista_cartas(tmp.cartas)
-          else:
-            for crt in tmp.cartas:
-
-              if valor is not None:
-                  if isinstance(valor, list):
-                      atributo = getattr(crt, chave, [])
-                      if any(item in atributo for item in valor):
-                          nova_colecao.adicionar_carta(crt)
-                  else:
-                      if getattr(crt, chave, None) == valor:
-                          nova_colecao.adicionar_carta(crt)
+              if valor == ['Região'] or valor == [''] or valor == 'Selecionar' or valor == '' or valor == 'Expansão':
+                nova_colecao.adiciona_lista_cartas(tmp.cartas)
               else:
-                nova_colecao.adicionar_carta(crt)
+                for crt in tmp.cartas:
 
-        return nova_colecao
+                  if valor is not None:
+                      if isinstance(valor, list):
+                          atributo = getattr(crt, chave, [])
+                          if any(item in atributo for item in valor):
+                              nova_colecao.adicionar_carta(crt)
+                      else:
+                          if getattr(crt, chave, None) == valor:
+                              nova_colecao.adicionar_carta(crt)
+                  else:
+                    nova_colecao.adicionar_carta(crt)
+
+            return nova_colecao
