@@ -1,7 +1,4 @@
 import tkinter as tk
-from pages.advanced import AdvancedScreen
-from utils.navigationFunctions import switchPage
-from pages.mainpage import mainPage
 from pages.filePage import filePage
 
 class App(tk.Frame):
