@@ -184,6 +184,9 @@ class ColecaoDeCartas:
             arvore_trie.carrega_arvore_trie(filenames.nomes)
         elif nome_ou_codigo == "codigo":
             arvore_trie.carrega_arvore_trie(filenames.codes)
+        else:
+            print("Parâmetro inválido. Use 'nome' ou 'codigo'.")
+            return None
         posicao_no_arquivo = arvore_trie.buscar(parametro)
         print(posicao_no_arquivo)
         nova_colecao = ColecaoDeCartas()
