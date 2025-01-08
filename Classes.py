@@ -14,6 +14,11 @@ class TrieNode:
     def __init__(self):
         self.children = {}  # Armazena os filhos do nó (cada filho é um caractere)
         self.posicoes = []  # Lista de posições dos dados no arquivo
+    
+    def coletar_posicoes(self, lista):
+        lista.extend(self.posicoes)
+        for filho in self.children.values():
+            filho.coletar_posicoes(lista)
 
 
 class Trie:
@@ -28,13 +33,17 @@ class Trie:
             no_atual = no_atual.children[char]
         no_atual.posicoes.append(posicao)
 
-    def buscar(trie, palavra):
-        no_atual: TrieNode = trie.root
-        for char in palavra:
+    def buscar(self, prefixo):
+        if not prefixo:
+            return None
+        no_atual: TrieNode = self.root
+        for char in prefixo:
             if char not in no_atual.children:
                 return None  # Se a palavra não for encontrada
             no_atual = no_atual.children[char]
-        return no_atual.posicoes  # Retorna as posições encontradas
+        resultado = []
+        no_atual.coletar_posicoes(resultado)
+        return resultado  # Retorna as posições encontradas
 
     def salva_arvore_trie(self, arquivo_binario):
         with open(arquivo_binario, 'wb') as f:
