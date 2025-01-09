@@ -19,13 +19,13 @@ def pagination(end, start, data, parent, grandParent):
     prevStart = start - 2
     start = end+1 
     end =  end +2
+    
     if end <= len(data):    
         nextbtn = tk.Button(parent, text="next", command=lambda: pagination(end, start, data, parent, grandParent))
         nextbtn.grid()
         prevbtn = tk.Button(parent, text="prev", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
         prevbtn.grid()
     else:
-        
         prevbtn = tk.Button(parent, text="prev", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
         prevbtn.grid()
 

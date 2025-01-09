@@ -1,8 +1,23 @@
 import tkinter as tk
+import itertools
+from utils.resultCard import resultCard
+from Classes import *
+def showAssociated(cards, parent):
+    sla = []
+    for item in cards:
+        arvore_codes = Trie()  # Trie para códigos
+        arvore_nomes = Trie()  # Trie para nomes
+        arquivos = Filenames()
+        arvore_codes.carrega_arvore_trie(arquivos.codes)
+        arvore_nomes.carrega_arvore_trie(arquivos.nomes)
+        resultado = ColecaoDeCartas.carrega_carta_Indexada(arquivos, item, "codigo")
+    sla.append(resultado.retorna_colecao())
+    sla = list(itertools.chain(*sla)).remove()
+    sla = set(sla)
 
-from Classes import Card
-
+    
 def detailedCard(parent, data:Card):
+    print(data)
     detailedFrame = tk.Frame(master=parent)
     detailedFrame.rowconfigure((0,1,2), weight=1)
     detailedFrame.columnconfigure((0,1,2), weight=1)
@@ -44,5 +59,8 @@ def detailedCard(parent, data:Card):
 
     flavorTextLabel = tk.Label(detailedFrame, text=f"Flavor Text: {data.flavor_text}")
     flavorTextLabel.grid(row=1, column=1, sticky="s")
+
+    related = tk.Button(text= "cartas relacionadas", command=lambda: showAssociated(data.associated_cards, parent))
+    related.grid()
 
     detailedFrame.grid(sticky="nsew")
