@@ -5,12 +5,17 @@ from pages.resultPage import resultPage
 from Classes import *
 from utils.navigationFunctions import switchPageWithData
 
+def strToInt(ent):
+    if ent != '':
+        return int(ent)
+    return None
+
 def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:tk.Entry = None, hp:tk.Entry= None, keyW:tk.Entry= None, rarity:str = "NONE", exp:tk.Entry= None, actualFrame = None, nextFrame = None, parent = None ):
     filtros_carta = {
     'regions': [region.get()],
-    'cost': cost.get(),
-    'attack': atk.get(),
-    'health': hp.get(),
+    'cost': strToInt(cost.get()),
+    'attack': strToInt(atk.get()),
+    'health': strToInt(hp.get()),
     'keywords': keyW.get().split(" "),
     'rarity': rarity.get(),
     'expansion': exp.get(),

@@ -15,19 +15,15 @@ class WebImage:
     def get(self):
         return self.image
 
-def resultCard(parent, data: Card, parent2):
-    resultFrame = tk.Frame(master=parent, background='red')
-
-    nameLabel = tk.Label(resultFrame, text=data.name)
-    img = WebImage(data.game_absolute_path).get()
-    
-
+def resultCard(parent, data: Card, showImages):
+    resultFrame = tk.Frame(master=parent)
+    nameLabel = tk.Label(resultFrame, text=data.name, font=("Arial", 12))
+    if showImages:
+        img = WebImage(data.game_absolute_path).get()
     # Store the image directly inside the label to prevent garbage collection
-    imgLabel = tk.Label(resultFrame, image=img)
-    imgLabel.image = img  # This ensures that the image is kept in memory
-
-    
-    imgLabel.grid(row=2, column= 0)
+        imgLabel = tk.Label(resultFrame, image=img)
+        imgLabel.image = img  # This ensures that the image is kept in memory
+        imgLabel.grid(row=2, column= 0)
     nameLabel.grid(row=0, column=0)
 
-    resultFrame.grid(column=1)
+    resultFrame.grid(sticky="n")

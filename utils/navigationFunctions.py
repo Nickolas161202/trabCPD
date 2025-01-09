@@ -7,6 +7,7 @@ def switchPage(actualFrame, nextFrame, parent):
 
 def switchPageWithData(actualFrame, nextFrame, parent, data): 
     actualFrame.destroy()
+    print(data)
     nextFrame(parent, data)
 
 

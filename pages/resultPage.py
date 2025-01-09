@@ -8,23 +8,36 @@ from pages.detailedPage import detailedCard
 def pagination(end, start, data, parent, grandParent):
     for frames in parent.winfo_children():
         frames.destroy()
-        
-    resultCard(parent, data[start], grandParent)
+    
+    first = tk.Frame(parent)
+    first.grid_rowconfigure(0, weight=1)
+    first.grid_columnconfigure(0, weight=1)
+    resultCard(first, data[start],  showImages=True)
+    first.grid(row=1, column=0, sticky="nw", padx=20)
     dtbtn = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[start]))
-    dtbtn.grid()
-    resultCard(parent, data[end], grandParent)
+    dtbtn.grid(row=1, column=0, sticky="sw", padx=20 )
+    
+    second = tk.Frame(parent)
+    resultCard(second, data[end],  showImages=True)
+    second.grid(row=1, column=1, sticky="ne")
     dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[end]))
-    dtbtn1.grid()
+    dtbtn1.grid(row=1, column=1, sticky="se")
+
     prevEnd = end - 2
     prevStart = start - 2
     start = end+1 
     end =  end +2
     
-    if end <= len(data):    
-        nextbtn = tk.Button(parent, text="next", command=lambda: pagination(end, start, data, parent, grandParent))
-        nextbtn.grid()
-        prevbtn = tk.Button(parent, text="prev", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
-        prevbtn.grid()
+    if prevStart < 0:
+        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent))
+        nextbtn.grid(column=1, row=2)
+
+    elif end <= len(data):
+
+        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent))
+        nextbtn.grid(column=1, row=2)
+        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
+        prevbtn.grid(column=1, row=2, sticky="w")
     else:
         prevbtn = tk.Button(parent, text="prev", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
         prevbtn.grid()
@@ -41,29 +54,20 @@ def switchToDetail(parent, nextFrame, data):
 def resultPage(parent, data:ColecaoDeCartas):
    
     data = data.retorna_colecao()
-    print(data)
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  
+    resultFrame.columnconfigure((0,1,2), weight=1, uniform= 'a')
+    resultFrame.rowconfigure(1,weight=2, uniform= 'a')
+    resultFrame.rowconfigure((0,2),weight=1, uniform= 'a')
     
-    canvas = tk.Canvas(resultFrame)
-    canvas.grid(row=0, column=0, sticky="nsew")  # Canvas inside the frame
-    scr = tk.Scrollbar(resultFrame, orient="vertical", command=canvas.yview)
-    scr.grid(row=0, column=1, sticky="ns")  # Scrollbar alongside the canvas
-    
-    canvas.configure(yscrollcommand=scr.set)
-    canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-    
-    secondFrame = tk.Frame(canvas, background='blue')
-    canvas.create_window((300, 0), window=secondFrame, anchor="nw")
     if len(data) == 0:
-        noResult = tk.Label(secondFrame, text="Não há nenhum resultado!")
-        noResult.pack()
+        noResult = tk.Label(resultFrame, text="Não há nenhum resultado!", font=("Arial Black", 20))
+        noResult.grid(column=1, row=1,  columnspan=2, sticky="n")
     elif(len(data) <=2):
         for item in data:
-            resultCard(secondFrame, item, parent)
+            resultCard(parent, item, parent)
     else:
-
-         pagination(1, 0, data, secondFrame, parent)
+        pagination(1, 0, data, resultFrame, parent)
 
 
         
