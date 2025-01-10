@@ -214,21 +214,6 @@ class ColecaoDeCartas:
                 carta_obj = pickle.loads(dados_serializados)
                 nova_colecao.adicionar_carta(carta_obj)
 
-        # Se houver várias posições para a chave, percorre todas
-        if isinstance(posicao_no_arquivo, list):  # Caso seja uma lista de posições
-            for posicao in posicao_no_arquivo:
-                with open(filenames.cards, 'rb') as f:
-                    f.seek(posicao)  # Vai até a posição onde o dado da carta está armazenado
-                    dados_serializados = f.read()
-                    carta_obj = pickle.loads(dados_serializados)
-                    nova_colecao.adicionar_carta(carta_obj)
-        else:
-            # Se houver apenas uma posição, carrega a carta diretamente
-            with open(filenames.cards, 'rb') as f:
-                f.seek(posicao_no_arquivo)  # Vai até a posição
-                dados_serializados = f.read()
-                carta_obj = pickle.loads(dados_serializados)
-                nova_colecao.adicionar_carta(carta_obj)
 
         return nova_colecao
 

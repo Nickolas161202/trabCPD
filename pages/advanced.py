@@ -16,7 +16,7 @@ def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:t
     'cost': strToInt(cost.get()),
     'attack': strToInt(atk.get()),
     'health': strToInt(hp.get()),
-    'keywords': keyW.get().split(" "),
+    'keywords': keyW.get().capitalize().split(","),
     'rarity': rarity.get(),
     'expansion': exp.get(),
     }
@@ -34,6 +34,7 @@ def AdvancedScreen(parent):
     rarities = ["COMMON", "RARE", "EPIC", "CHAMPION", "NONE"]
     regions = [ #array utilizado para gerar dinâmicamente os checkbuttons e seus respectivos valores
     "Bandle City",
+    "Noxus",
     "Bilgewater",
     "Demacia",
     "Freljord",
@@ -61,7 +62,7 @@ def AdvancedScreen(parent):
     manaSearch.grid(row=1, column=2, sticky="w")
 
 
-    kwLabel = tk.Label(adv_frame, text = "Palavras-chaves:")
+    kwLabel = tk.Label(adv_frame, text = "Palavras-chaves (Case sensitive):")
     kwLabel.grid(row=1, column=1, sticky="s")
     kwSearch = tk.Entry(adv_frame, )
     kwSearch.grid(row=1, column=2, sticky="sw")

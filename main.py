@@ -1,6 +1,6 @@
 import tkinter as tk
 from pages.filePage import filePage
-
+from Classes import *
 class App(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -13,7 +13,9 @@ def backToMain(a, b):
     b(a)
 
 def main():
+
     root = tk.Tk()
+
     root.minsize(1000, 700)
     root.configure(bg="#0000FF")  # Define the background color of the root window (optional)
     

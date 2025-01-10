@@ -16,15 +16,18 @@ def pagination(end, start, data, parent, grandParent, useImg):
     first.grid(row=1, column=0, sticky="nw", padx=20)
     dtbtn = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[start]))
     dtbtn.grid(row=1, column=0, sticky="sw", padx=20 )
-    
-    second = tk.Frame(parent)
-    resultCard(second, data[end],  useImg)
-    second.grid(row=1, column=1, sticky="ne")
-    dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[end]))
-    dtbtn1.grid(row=1, column=1, sticky="se")
+    try:
+        second = tk.Frame(parent)
+        resultCard(second, data[end],  useImg)
+        second.grid(row=1, column=1, sticky="ne")
+        dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[end]))
+        dtbtn1.grid(row=1, column=1, sticky="se")
+    except Exception:
+        pass
 
     prevEnd = end - 2
     prevStart = start - 2
+    
     start = end+1 
     end =  end +2
     
@@ -52,9 +55,10 @@ def switchToDetail(parent, nextFrame, data):
     nextFrame(parent, data)
 
 def resultPage(parent, data:list):
-    print(data)
     useImg = data[1].get()
-    data = data[0].retorna_colecao()
+    data = data[0].cartas
+    print(data)
+
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  
     resultFrame.columnconfigure((0,1,2), weight=1, uniform= 'a')
@@ -64,9 +68,7 @@ def resultPage(parent, data:list):
     if len(data) == 0:
         noResult = tk.Label(resultFrame, text="Não há nenhum resultado!", font=("Arial Black", 20))
         noResult.grid(column=1, row=1,  columnspan=2, sticky="n")
-    elif(len(data) <=2):
-        for item in data:
-            resultCard(parent, item, parent, useImg)
+
     else:
         pagination(1, 0, data, resultFrame, parent, useImg)
 
