@@ -29,18 +29,18 @@ def pagination(end, start, data, parent, grandParent, useImg):
     end =  end +2
     
     if prevStart < 0:
-        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent))
+        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
         nextbtn.grid(column=1, row=2)
 
     elif end <= len(data):
 
-        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent))
+        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
         nextbtn.grid(column=1, row=2)
-        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
+        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
         prevbtn.grid(column=1, row=2, sticky="w")
     else:
-        prevbtn = tk.Button(parent, text="prev", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent))
-        prevbtn.grid()
+        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
+        prevbtn.grid(column=1, row=2, sticky="w")
 
 
     
