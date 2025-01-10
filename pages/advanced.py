@@ -10,7 +10,7 @@ def strToInt(ent):
         return int(ent)
     return None
 
-def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:tk.Entry = None, hp:tk.Entry= None, keyW:tk.Entry= None, rarity:str = "NONE", exp:tk.Entry= None, actualFrame = None, nextFrame = None, parent = None ):
+def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:tk.Entry = None, hp:tk.Entry= None, keyW:tk.Entry= None, rarity:str = "NONE", exp:tk.Entry= None, actualFrame = None, parent = None, img = False ):
     filtros_carta = {
     'regions': [region.get()],
     'cost': strToInt(cost.get()),
@@ -22,8 +22,9 @@ def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:t
     }
     print(filtros_carta)
     data = getName(name)
+    
     data = data.filtra_colecao_simples(filtros_carta)
-    switchPageWithData(actualFrame, nextFrame, parent, data)
+    switchPageWithData(actualFrame, resultPage, parent, [data, img])
     
     
             
@@ -86,7 +87,9 @@ def AdvancedScreen(parent):
     rarityVar = tk.StringVar(value="Selecionar")
     rarityDropdown = tk.OptionMenu(adv_frame, rarityVar, *rarities)
     rarityDropdown.grid(row=2, column=2, sticky= "sw", pady=20)
-
-    btn = tk.Button(adv_frame, text="pesquisar", command=lambda: getEntries(inp, regionVar, manaSearch, dmgSearch, healthSearch, kwSearch, rarityVar, expansionVar, adv_frame, resultPage, parent))
+    imVar = tk.BooleanVar()
+    img = tk.Checkbutton(adv_frame, onvalue=True, offvalue=False, variable=imVar, text="Mostrar imagem? (requer conexão de rede)")
+    img.grid(row=3, column= 1, sticky="n")
+    btn = tk.Button(adv_frame, text="pesquisar", command=lambda: getEntries(inp, regionVar, manaSearch, dmgSearch, healthSearch, kwSearch, rarityVar, expansionVar, adv_frame, parent, imVar))
     btn.grid(row=3, column=1, sticky="ne", pady=20)
     adv_frame.grid(sticky="nsew")

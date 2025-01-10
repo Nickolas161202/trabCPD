@@ -5,20 +5,20 @@ from pages.detailedPage import detailedCard
 
 
 
-def pagination(end, start, data, parent, grandParent):
+def pagination(end, start, data, parent, grandParent, useImg):
     for frames in parent.winfo_children():
         frames.destroy()
     
     first = tk.Frame(parent)
     first.grid_rowconfigure(0, weight=1)
     first.grid_columnconfigure(0, weight=1)
-    resultCard(first, data[start],  showImages=True)
+    resultCard(first, data[start], useImg)
     first.grid(row=1, column=0, sticky="nw", padx=20)
     dtbtn = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[start]))
     dtbtn.grid(row=1, column=0, sticky="sw", padx=20 )
     
     second = tk.Frame(parent)
-    resultCard(second, data[end],  showImages=True)
+    resultCard(second, data[end],  useImg)
     second.grid(row=1, column=1, sticky="ne")
     dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[end]))
     dtbtn1.grid(row=1, column=1, sticky="se")
@@ -51,9 +51,10 @@ def switchToDetail(parent, nextFrame, data):
         frames.destroy()
     nextFrame(parent, data)
 
-def resultPage(parent, data:ColecaoDeCartas):
-   
-    data = data.retorna_colecao()
+def resultPage(parent, data:list):
+    print(data)
+    useImg = data[1].get()
+    data = data[0].retorna_colecao()
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  
     resultFrame.columnconfigure((0,1,2), weight=1, uniform= 'a')
@@ -65,9 +66,9 @@ def resultPage(parent, data:ColecaoDeCartas):
         noResult.grid(column=1, row=1,  columnspan=2, sticky="n")
     elif(len(data) <=2):
         for item in data:
-            resultCard(parent, item, parent)
+            resultCard(parent, item, parent, useImg)
     else:
-        pagination(1, 0, data, resultFrame, parent)
+        pagination(1, 0, data, resultFrame, parent, useImg)
 
 
         
