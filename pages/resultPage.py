@@ -25,25 +25,25 @@ def pagination(end, start, data, parent, grandParent, useImg):
     except Exception:
         pass
 
-    prevEnd = end - 2
-    prevStart = start - 2
+    if len(data) >2:
+        prevEnd = end - 2
+        prevStart = start - 2
+        start = end+1 
+        end =  end +2
     
-    start = end+1 
-    end =  end +2
-    
-    if prevStart < 0:
-        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
-        nextbtn.grid(column=1, row=2)
+        if prevStart < 0:
+            nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
+            nextbtn.grid(column=1, row=2)
 
-    elif end <= len(data):
+        elif end <= len(data):
 
-        nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
-        nextbtn.grid(column=1, row=2)
-        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
-        prevbtn.grid(column=1, row=2, sticky="w")
-    else:
-        prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
-        prevbtn.grid(column=1, row=2, sticky="w")
+            nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
+            nextbtn.grid(column=1, row=2)
+            prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
+            prevbtn.grid(column=1, row=2, sticky="w")
+        else:
+            prevbtn = tk.Button(parent, text="Anterior", command=lambda: pagination(prevEnd, prevStart, data, parent, grandParent, useImg))
+            prevbtn.grid(column=1, row=2, sticky="w")
 
 
     

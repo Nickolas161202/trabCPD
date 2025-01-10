@@ -31,7 +31,7 @@ def getEntries(name:tk.Entry, region:tk.Entry = None,cost:tk.Entry = None ,atk:t
 
 def AdvancedScreen(parent):
     expansions =["Set" + str(i) for i in range(1,8)]
-    rarities = ["COMMON", "RARE", "EPIC", "CHAMPION", "NONE"]
+    rarities = ["Common", "Rare", "Epic", "Champion", "None"]
     regions = [ #array utilizado para gerar dinâmicamente os checkbuttons e seus respectivos valores
     "Bandle City",
     "Noxus",

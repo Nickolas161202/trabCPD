@@ -7,7 +7,7 @@ from pages.mainpage import mainPage
 from Classes import *
 
 def openFile(arquivos, actualframe, newFrame, parent):
-    filename = filedialog.askdirectory() #salva o diretório da pasta
+    filename = './data' #salva o diretório da pasta
     set1 = ColecaoDeCartas()
     trie_codes = Trie()  # Trie para códigos
     trie_nomes = Trie()  # Trie para nomes
@@ -29,7 +29,7 @@ def filePage(parent):
     file_frame.rowconfigure((0,1,2), weight=1, uniform='a')
 
 
-    Label =tk.Label(file_frame, text= "Escolha a pasta de dados json caso queira um novo arquivo binário", font=('Arial', 12) )
+    Label =tk.Label(file_frame, text= "Crie um arquivo binário (caso seja necessário)", font=('Arial', 12) )
     Label.grid(row=0, column=0, sticky='se', padx=20, pady=20, columnspan=2)
 
     dataBtn = tk.Button(file_frame, text="Extrair dados", command= lambda: openFile(arquivos, file_frame, filePage, parent))
