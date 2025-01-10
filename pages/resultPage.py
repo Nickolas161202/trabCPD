@@ -8,28 +8,32 @@ from pages.detailedPage import detailedCard
 def pagination(end, start, data, parent, grandParent, useImg):
     for frames in parent.winfo_children():
         frames.destroy()
-    
+
     first = tk.Frame(parent)
     first.grid_rowconfigure(0, weight=1)
     first.grid_columnconfigure(0, weight=1)
     resultCard(first, data[start], useImg)
+    dataStart = data[start]
     first.grid(row=1, column=0, sticky="nw", padx=20)
-    dtbtn = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[start]))
+    dtbtn = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, dataStart))
     dtbtn.grid(row=1, column=0, sticky="sw", padx=20 )
     try:
+        dataEnd = data[end]
         second = tk.Frame(parent)
         resultCard(second, data[end],  useImg)
         second.grid(row=1, column=1, sticky="ne")
-        dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, detailedCard, data[end]))
+        dtbtn1 = tk.Button(parent, text= "Detalhes", command= lambda: switchToDetail(grandParent, dataEnd))
         dtbtn1.grid(row=1, column=1, sticky="se")
     except Exception:
         pass
+    prevEnd = end - 2
+    prevStart = start - 2
+        
+    start = end+1 
+    end =  end +2
 
     if len(data) >2:
-        prevEnd = end - 2
-        prevStart = start - 2
-        start = end+1 
-        end =  end +2
+ 
     
         if prevStart < 0:
             nextbtn = tk.Button(parent, text="Próximo", command=lambda: pagination(end, start, data, parent, grandParent, useImg))
@@ -48,16 +52,14 @@ def pagination(end, start, data, parent, grandParent, useImg):
 
     
     
-def switchToDetail(parent, nextFrame, data):
-    print(parent.winfo_children())
+def switchToDetail(parent, data):
     for frames in parent.winfo_children():
         frames.destroy()
-    nextFrame(parent, data)
+    detailedCard(parent, data)
 
 def resultPage(parent, data:list):
     useImg = data[1].get()
     data = data[0].cartas
-    print(data)
 
     resultFrame = tk.Frame(master=parent)
     resultFrame.grid(row=0, column=0, sticky="nsew")  
